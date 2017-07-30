@@ -1,0 +1,33 @@
+---
+title: "Where do I live next?"
+author: "Vicki Lowe"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Install / load required packages
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(httr, jsonlite)
+```
+
+## Sydney's property market
+
+
+Let's use the domain.com.au listing api to visualise where I might want to live.
+
+```{r use the domain.com.au listing api}
+# Read in my domain.com.au credentials: client_id and client_secret
+source('api_keys_domain.R')
+
+# Get latest access token
+access.token.response <- GET(
+  "https://developer.domain.com.au/io-docs/getoauth2accesstoken", 
+  query = list(
+    apiId = 6611,
+    auth_flow = "client_cred",
+    client_id = client_id,
+    client_secret = client_secret),
+  verbose())
+access.token <- content(access.token.response)$result$access_token
+```
