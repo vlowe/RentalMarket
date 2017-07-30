@@ -15,8 +15,8 @@ pacman::p_load(httr, jsonlite)
 
 The Domain Group provides access to their agency, listing, and property data by [signing up](https://developer.domain.com.au/docs) for an account. I followed their [Getting Started](https://developer.domain.com.au/docs/read/Getting_Started) instructions and found out that I could get all the rental information available on [domain.com.au](domain.com.au).
 
-My access token expired after 12 hours, so I automated the renewal process. My Domain Group credentials are in a separate, non-public file, called api_keys_domain.R.
-```{r use the domain.com.au listing API}
+My access token expired after 12 hours, so I automated the renewal process:
+```{r get access to the Domain Group}
 # Read in my Domain Group credentials: client_id and client_secret
 source('api_keys_domain.R')
 
@@ -30,4 +30,32 @@ access.token.response <- GET(
     client_secret = client_secret),
   verbose())
 access.token <- content(access.token.response)$result$access_token
+```
+
+Now I can request the listing information that I want. Let's start with Pyrmont:
+```{r use the listing API}
+# Set up the request format to match https://developer.domain.com.au/io-docs
+pyrmont.rentals <- POST(
+  "https://api.domain.com.au/v1/listings/_search", 
+  add_headers(
+    Authorization = paste("Bearer", access.token), 
+    "Content-Type" = "application/json"), 
+          body = list(
+            listingtype = "Rent", 
+             locations = list(
+               list(
+                 state = "NSW",
+                 suburb = "Pyrmont"))),
+          encode = "json", verbose())
+
+# Check that the response is valid
+# 2xx = success
+# 4xx or 5xx = error
+pyrmont.rentals$status_code
+
+pyrmont.rentals.headers <- headers(pyrmont.rentals)
+pyrmont.rentals.content <- content(pyrmont.rentals)
+
+# Shifting to prettyprinted JSON to ease readability
+pyrmont.rentals.json <- toJSON(content(pyrmont.rentals), pretty = TRUE)
 ```

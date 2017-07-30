@@ -125,7 +125,7 @@ $(document).ready(function () {
 <div id="i-need-data" class="section level2">
 <h2>I need data</h2>
 <p>The Domain Group provides access to their agency, listing, and property data by <a href="https://developer.domain.com.au/docs">signing up</a> for an account. I followed their <a href="https://developer.domain.com.au/docs/read/Getting_Started">Getting Started</a> instructions and found out that I could get all the rental information available on <a href="domain.com.au" class="uri">domain.com.au</a>.</p>
-<p>My access token expired after 12 hours, so I automated the renewal process. My Domain Group credentials are in a separate, non-public file, called api_keys_domain.R.</p>
+<p>My access token expired after 12 hours, so I automated the renewal process:</p>
 <pre class="r"><code># Read in my Domain Group credentials: client_id and client_secret
 source('api_keys_domain.R')
 
@@ -139,6 +139,30 @@ access.token.response &lt;- GET(
     client_secret = client_secret),
   verbose())
 access.token &lt;- content(access.token.response)$result$access_token</code></pre>
+<p>Now I can request the listing information that I want. Let’s start with Pyrmont:</p>
+<pre class="r"><code># Set up the request format to match https://developer.domain.com.au/io-docs
+pyrmont.rentals &lt;- POST(
+  &quot;https://api.domain.com.au/v1/listings/_search&quot;, 
+  add_headers(
+    Authorization = paste(&quot;Bearer&quot;, access.token), 
+    &quot;Content-Type&quot; = &quot;application/json&quot;), 
+          body = list(
+            listingtype = &quot;Rent&quot;, 
+             locations = list(
+               list(
+                 state = &quot;NSW&quot;,
+                 suburb = &quot;Pyrmont&quot;))),
+          encode = &quot;json&quot;, verbose())</code></pre>
+<pre class="r"><code># Check that the response is valid
+# 2xx = success
+# 4xx or 5xx = error
+pyrmont.rentals$status_code</code></pre>
+<pre><code>## [1] 200</code></pre>
+<pre class="r"><code>pyrmont.rentals.headers &lt;- headers(pyrmont.rentals)
+pyrmont.rentals.content &lt;- content(pyrmont.rentals)
+
+# Shifting to prettyprinted JSON to ease readability
+pyrmont.rentals.json &lt;- toJSON(content(pyrmont.rentals), pretty = TRUE)</code></pre>
 </div>
 
 
