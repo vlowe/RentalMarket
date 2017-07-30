@@ -122,15 +122,16 @@ $(document).ready(function () {
 </div>
 
 
-<div id="sydneys-property-market" class="section level2">
-<h2>Sydney’s property market</h2>
-<p>Let’s use the domain.com.au listing api to visualise where I might want to live.</p>
-<pre class="r"><code># Read in my Domain credentials: client_id and client_secret
+<div id="i-need-data" class="section level2">
+<h2>I need data</h2>
+<p>The Domain Group provides access to their agency, listing, and property data by <a href="https://developer.domain.com.au/docs">signing up</a> for an account. I followed their <a href="https://developer.domain.com.au/docs/read/Getting_Started">Getting Started</a> instructions and found out that I could get all the rental information available on <a href="domain.com.au" class="uri">domain.com.au</a>.</p>
+<p>My access token expired after 12 hours, so I automated the renewal process. My Domain Group credentials are in a separate, non-public file, called api_keys_domain.R.</p>
+<pre class="r"><code># Read in my Domain Group credentials: client_id and client_secret
 source('api_keys_domain.R')
 
 # Get latest access token
 access.token.response &lt;- GET(
-  &quot;https://developer.domain.com.au/io-docs/getoauth2accesstoken&quot;, 
+  &quot;https://developer.domain.com.au/io-docs/getoauth2accesstoken&quot;,
   query = list(
     apiId = 6611,
     auth_flow = &quot;client_cred&quot;,
