@@ -45,7 +45,8 @@ pyrmont.rentals <- POST(
              locations = list(
                list(
                  state = "NSW",
-                 suburb = "Pyrmont"))),
+                 suburb = "Pyrmont")),
+            pageSize = 200),
           encode = "json", verbose())
 
 # Check that the response is valid
@@ -58,4 +59,8 @@ pyrmont.rentals.content <- content(pyrmont.rentals)
 
 # Shifting to prettyprinted JSON to ease readability
 pyrmont.rentals.json <- toJSON(content(pyrmont.rentals), pretty = TRUE)
+# pyrmont.rentals.json
+
+# How many properties are there?
+length(pyrmont.rentals.content)
 ```

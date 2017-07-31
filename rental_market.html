@@ -151,7 +151,8 @@ pyrmont.rentals &lt;- POST(
              locations = list(
                list(
                  state = &quot;NSW&quot;,
-                 suburb = &quot;Pyrmont&quot;))),
+                 suburb = &quot;Pyrmont&quot;)),
+            pageSize = 200),
           encode = &quot;json&quot;, verbose())</code></pre>
 <pre class="r"><code># Check that the response is valid
 # 2xx = success
@@ -162,7 +163,12 @@ pyrmont.rentals$status_code</code></pre>
 pyrmont.rentals.content &lt;- content(pyrmont.rentals)
 
 # Shifting to prettyprinted JSON to ease readability
-pyrmont.rentals.json &lt;- toJSON(content(pyrmont.rentals), pretty = TRUE)</code></pre>
+pyrmont.rentals.json &lt;- toJSON(content(pyrmont.rentals), pretty = TRUE)
+# pyrmont.rentals.json
+
+# How many properties are there?
+length(pyrmont.rentals.content)</code></pre>
+<pre><code>## [1] 89</code></pre>
 </div>
 
 
